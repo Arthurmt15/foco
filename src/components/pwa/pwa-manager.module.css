@@ -1,0 +1,55 @@
+.card {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #ded9cd;
+  border-radius: 22px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 22px;
+}
+
+.card h2 {
+  color: #18392b;
+  font-size: 1.1rem;
+  margin: 3px 0 6px;
+}
+
+.card p {
+  color: #667068;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0;
+  max-width: 48ch;
+}
+
+.card button {
+  background: #18392b;
+  border: 0;
+  border-radius: 12px;
+  color: #ffffff;
+  cursor: pointer;
+  flex: 0 0 auto;
+  font: inherit;
+  font-weight: 700;
+  padding: 12px 16px;
+}
+
+.card .update {
+  background: #d98b35;
+}
+
+.eyebrow {
+  color: #a05f20;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
