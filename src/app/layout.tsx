@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const dmSans = DM_Sans({
+const manrope = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const fraunces = Fraunces({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Foco | Seus objetivos no ritmo certo",
-  description: "Acompanhe objetivos, metas e sua evolução semanal.",
+  description: "Acompanhe objetivos e sua evolução diária, semanal e mensal.",
   applicationName: "Foco",
   appleWebApp: {
     capable: true,
@@ -23,12 +23,14 @@ export const metadata: Metadata = {
   },
   formatDetection: { telephone: false },
   icons: {
+    icon: "/icons/icon-192.png",
+    shortcut: "/icons/icon-192.png",
     apple: "/icons/icon-192.png",
   },
 };
 
 export const viewport = {
-  themeColor: "#18392b",
+  themeColor: "#10172a",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -36,7 +38,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${dmSans.variable} ${fraunces.variable}`}>
+    <html lang="pt-BR" className={`${manrope.variable} ${spaceGrotesk.variable}`}>
       <body>{children}</body>
     </html>
   );

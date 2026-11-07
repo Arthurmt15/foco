@@ -74,14 +74,14 @@ export function Dashboard() {
         </a>
         <div className={styles.weekLabel}>
           <small>Visão atual</small>
-          <strong>Períodos ativos</strong>
+          <strong>Todos os períodos</strong>
         </div>
       </header>
 
       <section className={styles.hero} id="top">
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>Seu ritmo geral</span>
-          <h1>Continue presente.<br />O caminho aparece.</h1>
+          <span className={styles.eyebrow}>Painel de progresso</span>
+          <h1>Clareza no plano.<br />Ritmo na prática.</h1>
           <p>{STATE_MESSAGE[summary.state]}</p>
           <span className={`${styles.status} ${styles[summary.state]}`}>
             <i /> {STATE_LABEL[summary.state]}
@@ -90,7 +90,7 @@ export function Dashboard() {
         <div className={styles.ring} style={ringStyle} aria-label={`${percent}% concluído`}>
           <div>
             <strong>{percent}%</strong>
-            <span>realizado</span>
+            <span>progresso geral</span>
           </div>
         </div>
       </section>
@@ -105,7 +105,7 @@ export function Dashboard() {
       <section className={styles.section} aria-labelledby="objectives-title">
         <div className={styles.sectionTitle}>
           <div>
-            <span className={styles.eyebrow}>Prioridades</span>
+            <span className={styles.eyebrow}>Seu plano</span>
             <h2 id="objectives-title">Objetivos principais</h2>
           </div>
           <span className={styles.hint}>A marca indica o esperado hoje</span>
@@ -122,7 +122,7 @@ export function Dashboard() {
               </div>
               <div className={styles.goalGrid}>
                 {goals.map((progress) => (
-                  <article className={styles.goalCard} key={progress.goal.id}>
+                  <article className={styles.goalCard} data-state={progress.state} key={progress.goal.id}>
                     <div className={styles.goalTop}>
                       <span className={`${styles.dot} ${styles[progress.state]}`} />
                       <span>{STATE_LABEL[progress.state]}</span>
@@ -143,7 +143,7 @@ export function Dashboard() {
       <section className={styles.section} aria-labelledby="environments-title">
         <div className={styles.sectionTitle}>
           <div>
-            <span className={styles.eyebrow}>Equilíbrio</span>
+            <span className={styles.eyebrow}>Mapa de vida</span>
             <h2 id="environments-title">Ambientes</h2>
           </div>
         </div>
@@ -161,7 +161,7 @@ export function Dashboard() {
       <section className={styles.settings} aria-labelledby="settings-title">
         <div className={styles.sectionTitle}>
           <div>
-            <span className={styles.eyebrow}>Preferências</span>
+            <span className={styles.eyebrow}>Aplicativo</span>
             <h2 id="settings-title">Configurações</h2>
           </div>
         </div>
