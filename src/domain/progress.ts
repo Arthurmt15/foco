@@ -54,6 +54,7 @@ function periodBounds(goal: Goal, today: Date): { start: Date; end: Date } {
 
 function isScheduled(goal: Goal, date: Date): boolean {
   if (goal.schedule.periodicity === "daily") return true;
+  if (goal.schedule.scheduleMode === "flexible") return true;
   if (goal.schedule.periodicity === "monthly") {
     const days = goal.schedule.monthDays ?? [];
     return days.length === 0 || days.includes(date.getDate());

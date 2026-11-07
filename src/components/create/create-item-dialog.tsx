@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent, type MouseEvent } from "react";
 import { addEnvironment, addGoal } from "@/data/foco-store";
-import type { FocoData, Periodicity } from "@/domain/foco-types";
+import type { FocoData, Periodicity, ScheduleMode } from "@/domain/foco-types";
 import { toDateKey } from "@/domain/progress";
 import styles from "./create-item-dialog.module.css";
 
@@ -17,13 +17,13 @@ interface CreateItemDialogProps {
 
 const COLORS = ["#7357ff", "#39c981", "#ff8a5b", "#3b82f6", "#e05287", "#8f6b55"];
 const WEEKDAYS = [
-  { value: 1, label: "S" },
-  { value: 2, label: "T" },
-  { value: 3, label: "Q" },
-  { value: 4, label: "Q" },
-  { value: 5, label: "S" },
-  { value: 6, label: "S" },
-  { value: 0, label: "D" },
+  { value: 1, label: "S", name: "Segunda" },
+  { value: 2, label: "T", name: "Terça" },
+  { value: 3, label: "Q", name: "Quarta" },
+  { value: 4, label: "Q", name: "Quinta" },
+  { value: 5, label: "S", name: "Sexta" },
+  { value: 6, label: "S", name: "Sábado" },
+  { value: 0, label: "D", name: "Domingo" },
 ];
 
 export function CreateItemDialog({ data, initialMode, onClose, onDataChange }: CreateItemDialogProps) {
@@ -32,6 +32,7 @@ export function CreateItemDialog({ data, initialMode, onClose, onDataChange }: C
   const [color, setColor] = useState(COLORS[0]);
   const [environmentId, setEnvironmentId] = useState(data.environments[0]?.id ?? "");
   const [periodicity, setPeriodicity] = useState<Periodicity>("weekly");
+  const [scheduleMode, setScheduleMode] = useState<ScheduleMode>("flexible");
   const [target, setTarget] = useState("1");
   const [unit, setUnit] = useState("vezes");
   const [increment, setIncrement] = useState("1");
@@ -72,14 +73,14 @@ export function CreateItemDialog({ data, initialMode, onClose, onDataChange }: C
     }
 
     if (!environmentId) return setError("Crie um ambiente antes de adicionar uma meta.");
-    if (periodicity === "weekly" && weekdays.length === 0) {
+    if (periodicity === "weekly" && scheduleMode === "fixed" && weekdays.length === 0) {
       return setError("Selecione pelo menos um dia da semana.");
     }
     const parsedMonthDays = [...new Set(
       monthDays.split(",").map(Number).filter((day) => Number.isInteger(day) && day >= 1 && day <= 31),
     )];
-    if (periodicity === "monthly" && monthDays.trim() && parsedMonthDays.length === 0) {
-      return setError("Use dias válidos entre 1 e 31, separados por vírgula.");
+    if (periodicity === "monthly" && scheduleMode === "fixed" && parsedMonthDays.length === 0) {
+      return setError("Informe ao menos um dia entre 1 e 31.");
     }
 
     const updated = addGoal(data, {
@@ -90,11 +91,12 @@ export function CreateItemDialog({ data, initialMode, onClose, onDataChange }: C
       featured: true,
       schedule: {
         periodicity,
+        ...(periodicity !== "daily" ? { scheduleMode } : {}),
         target: Number(target),
         startsAt,
         ...(endsAt ? { endsAt } : {}),
-        ...(periodicity === "weekly" ? { weekdays } : {}),
-        ...(periodicity === "monthly" ? { monthDays: parsedMonthDays } : {}),
+        ...(periodicity === "weekly" && scheduleMode === "fixed" ? { weekdays } : {}),
+        ...(periodicity === "monthly" && scheduleMode === "fixed" ? { monthDays: parsedMonthDays } : {}),
       },
     });
     onDataChange(updated);
@@ -146,18 +148,26 @@ export function CreateItemDialog({ data, initialMode, onClose, onDataChange }: C
                   </button>
                 ))}
               </fieldset>
+              {periodicity !== "daily" && (
+                <fieldset className={`${styles.full} ${styles.scheduleModes}`}>
+                  <legend>Escolha dos dias</legend>
+                  <button type="button" aria-pressed={scheduleMode === "flexible"} onClick={() => setScheduleMode("flexible")}>Dias flexíveis</button>
+                  <button type="button" aria-pressed={scheduleMode === "fixed"} onClick={() => setScheduleMode("fixed")}>Dias fixos</button>
+                  <small>{scheduleMode === "flexible" ? "Faça quando puder, inclusive no fim de semana." : "Escolha exatamente quais dias entram no planejamento."}</small>
+                </fieldset>
+              )}
               <label><span>Meta do período</span><input type="number" min="0.01" step="0.01" value={target} onChange={(event) => setTarget(event.target.value)} required /></label>
               <label><span>Unidade</span><input value={unit} onChange={(event) => setUnit(event.target.value)} placeholder="vezes, km, min" required /></label>
               <label><span>Valor por check-in</span><input type="number" min="0.01" step="0.01" value={increment} onChange={(event) => setIncrement(event.target.value)} required /></label>
               <label><span>Começa em</span><input type="date" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} required /></label>
-              {periodicity === "weekly" && (
+              {periodicity === "weekly" && scheduleMode === "fixed" && (
                 <fieldset className={`${styles.full} ${styles.weekdays}`}>
                   <legend>Dias planejados</legend>
-                  {WEEKDAYS.map((day, index) => <button key={index} type="button" aria-pressed={weekdays.includes(day.value)} onClick={() => toggleWeekday(day.value)}>{day.label}</button>)}
+                  {WEEKDAYS.map((day) => <button key={day.value} type="button" aria-label={day.name} title={day.name} aria-pressed={weekdays.includes(day.value)} onClick={() => toggleWeekday(day.value)}>{day.label}</button>)}
                 </fieldset>
               )}
-              {periodicity === "monthly" && (
-                <label className={styles.full}><span>Dias do mês (opcional)</span><input value={monthDays} onChange={(event) => setMonthDays(event.target.value)} placeholder="Ex.: 5, 12, 19, 26" /><small>Sem dias definidos, o progresso é distribuído pelo mês.</small></label>
+              {periodicity === "monthly" && scheduleMode === "fixed" && (
+                <label className={styles.full}><span>Dias do mês</span><input value={monthDays} onChange={(event) => setMonthDays(event.target.value)} placeholder="Ex.: 5, 12, 19, 26" /><small>Separe os dias com vírgulas.</small></label>
               )}
               <label className={styles.full}><span>Termina em (opcional)</span><input type="date" min={startsAt} value={endsAt} onChange={(event) => setEndsAt(event.target.value)} /></label>
             </>

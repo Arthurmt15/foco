@@ -30,6 +30,18 @@ const PERIOD_META: Record<Periodicity, { title: string; detail: string }> = {
   monthly: { title: "Metas mensais", detail: "Acompanham o calendário do mês" },
 };
 
+const WEEKDAY_LABEL = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+function scheduleLabel(progress: GoalProgress): string {
+  const schedule = progress.goal.schedule;
+  if (schedule.periodicity === "daily") return "Todos os dias";
+  if (schedule.scheduleMode === "flexible") return "Dias flexíveis";
+  if (schedule.periodicity === "weekly") {
+    return (schedule.weekdays ?? []).map((day) => WEEKDAY_LABEL[day]).join(", ");
+  }
+  return `Dias ${(schedule.monthDays ?? []).join(", ")}`;
+}
+
 function clampPercentage(value: number): number {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
@@ -138,6 +150,7 @@ export function Dashboard() {
                     </div>
                     <h3>{progress.goal.name}</h3>
                     <p>{progress.actual} de {progress.target} {progress.goal.unit}</p>
+                    <span className={styles.scheduleNote}>{scheduleLabel(progress)}</span>
                     <ProgressBar progress={progress} />
                     <button type="button" onClick={() => register(progress)}>+ Registrar avanço</button>
                   </article>

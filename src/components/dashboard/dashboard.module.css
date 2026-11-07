@@ -193,6 +193,7 @@
 .goalTop strong { color: var(--ink); font-size: 0.9rem; margin-left: auto; }
 .goalCard h3 { color: var(--ink); font-family: var(--font-display), sans-serif; font-size: 1.04rem; letter-spacing: -0.035em; margin: 31px 0 5px; }
 .goalCard p { color: var(--muted); font-size: 0.72rem; }
+.scheduleNote { color: #7357ff; display: block; font-size: 0.62rem; font-weight: 750; margin-top: 6px; }
 .track { background: #edf0f6; border-radius: 99px; height: 7px; margin: 18px 0; position: relative; }
 .fill { background: linear-gradient(90deg, #7357ff, #39c981); border-radius: inherit; display: block; height: 100%; }
 .expected { background: var(--ink); border: 2px solid #ffffff; border-radius: 50%; height: 12px; position: absolute; top: -3px; transform: translateX(-50%); width: 12px; }

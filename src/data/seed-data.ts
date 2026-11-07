@@ -19,7 +19,7 @@ export function createSeedData(today = new Date()): FocoData {
   });
 
   return {
-    version: 3,
+    version: 4,
     environments: [
       { id: "health", name: "Saúde", color: "#3d7d5c" },
       { id: "growth", name: "Crescimento", color: "#d98b35" },
@@ -37,6 +37,7 @@ export function createSeedData(today = new Date()): FocoData {
         featured: true,
         schedule: {
           periodicity: "weekly",
+          scheduleMode: "fixed",
           target: 5,
           weekdays: [1, 2, 3, 4, 5],
           startsAt: startedAt,
@@ -64,6 +65,7 @@ export function createSeedData(today = new Date()): FocoData {
         featured: true,
         schedule: {
           periodicity: "weekly",
+          scheduleMode: "fixed",
           target: 4,
           weekdays: [1, 2, 4, 5],
           startsAt: startedAt,
@@ -78,6 +80,7 @@ export function createSeedData(today = new Date()): FocoData {
         featured: true,
         schedule: {
           periodicity: "monthly",
+          scheduleMode: "fixed",
           target: 4,
           monthDays: [5, 12, 19, 26],
           startsAt: startedAt,

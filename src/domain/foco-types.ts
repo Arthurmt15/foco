@@ -1,5 +1,6 @@
 export type ProgressState = "on-track" | "attention" | "behind" | "neutral";
 export type Periodicity = "daily" | "weekly" | "monthly";
+export type ScheduleMode = "fixed" | "flexible";
 
 export interface Environment {
   id: string;
@@ -9,6 +10,7 @@ export interface Environment {
 
 export interface GoalSchedule {
   periodicity: Periodicity;
+  scheduleMode?: ScheduleMode;
   target: number;
   weekdays?: number[];
   monthDays?: number[];
@@ -34,7 +36,7 @@ export interface CheckIn {
 }
 
 export interface FocoData {
-  version: 3;
+  version: 4;
   environments: Environment[];
   goals: Goal[];
   checkIns: CheckIn[];

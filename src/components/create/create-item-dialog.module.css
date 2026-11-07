@@ -129,6 +129,20 @@
 .error { grid-column: 1 / -1; }
 .periods { display: grid !important; grid-template-columns: repeat(3, 1fr); }
 .periods legend { grid-column: 1 / -1; }
+.scheduleModes { display: grid !important; grid-template-columns: 1fr 1fr; }
+.scheduleModes legend,
+.scheduleModes small { grid-column: 1 / -1; }
+.scheduleModes button {
+  background: #ffffff;
+  border: 1px solid #dfe3ed;
+  border-radius: 10px;
+  color: #697086;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 750;
+  padding: 10px;
+}
+.scheduleModes button[aria-pressed="true"] { background: #eeeaff; border-color: #7357ff; color: #5b40df; }
 
 .weekdays {
   display: grid !important;
