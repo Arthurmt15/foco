@@ -1,8 +1,10 @@
 .page {
   margin: 0 auto;
   max-width: 1120px;
+  min-width: 0;
   min-height: 100dvh;
   padding: 22px clamp(18px, 4vw, 48px) 80px;
+  width: 100%;
 }
 
 .loading {
@@ -206,7 +208,7 @@
 .goalGrid {
   display: grid;
   gap: 14px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .goalCard {
@@ -238,7 +240,7 @@
   border: 1px solid #e1dcd1;
   border-radius: 20px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   overflow: hidden;
 }
 
@@ -254,9 +256,13 @@
 
 @media (max-width: 720px) {
   .page { padding-inline: 14px; }
-  .hero { align-items: flex-start; border-radius: 24px; flex-direction: column; gap: 34px; }
-  .ring { align-self: flex-end; height: 135px; width: 135px; }
-  .metrics { grid-template-columns: repeat(2, 1fr); margin: -16px 12px 0; }
+  .hero { align-items: flex-start; border-radius: 24px; flex-direction: column; gap: 34px; min-width: 0; width: 100%; }
+  .heroCopy { min-width: 0; width: 100%; }
+  .hero h1 { font-size: clamp(1.9rem, 9vw, 2.4rem); overflow-wrap: anywhere; }
+  .ring { align-self: flex-end; height: 135px; margin-left: 0; width: 135px; }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: -16px 12px 0; width: calc(100% - 24px); }
+  .metrics article { min-width: 0; padding-inline: 10px; }
+  .metrics span { display: block; overflow-wrap: anywhere; }
   .metrics article:nth-child(3) { border-left: 0; border-top: 1px solid #eee9df; }
   .metrics article:nth-child(4) { border-top: 1px solid #eee9df; }
   .goalGrid { grid-template-columns: 1fr; }
