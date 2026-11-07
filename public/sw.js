@@ -1,6 +1,5 @@
 const CACHE_VERSION = "foco-shell-v1";
-const APP_SHELL = [
-  "/",
+const STATIC_SHELL = [
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -8,7 +7,18 @@ const APP_SHELL = [
 
 // O shell mínimo torna a tela inicial acessível mesmo sem uma conexão ativa.
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_VERSION).then((cache) => cache.addAll(APP_SHELL)));
+  event.waitUntil(
+    caches.open(CACHE_VERSION).then(async (cache) => {
+      await cache.addAll(STATIC_SHELL);
+      const response = await fetch("/");
+      const html = await response.clone().text();
+      await cache.put("/", response);
+
+      // O HTML informa os chunks com hash que precisam existir na primeira sessão offline.
+      const assets = [...new Set(html.match(/\/_next\/static\/[^"'<>\s]+/g) ?? [])];
+      await Promise.allSettled(assets.map((asset) => cache.add(asset.replaceAll("&amp;", "&"))));
+    }),
+  );
 });
 
 self.addEventListener("activate", (event) => {

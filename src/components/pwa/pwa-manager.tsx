@@ -17,6 +17,13 @@ function isStandalone() {
   );
 }
 
+function isIos() {
+  return (
+    /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
+  );
+}
+
 export function PwaManager() {
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const [installState, setInstallState] = useState<InstallState>("unsupported");
@@ -26,8 +33,7 @@ export function PwaManager() {
     let active = true;
     queueMicrotask(() => {
       if (!active) return;
-      const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      setInstallState(isStandalone() ? "installed" : ios ? "ios" : "unsupported");
+      setInstallState(isStandalone() ? "installed" : isIos() ? "ios" : "unsupported");
     });
 
     const capturePrompt = (event: Event) => {
@@ -38,7 +44,10 @@ export function PwaManager() {
     const markInstalled = () => setInstallState("installed");
     const checkForUpdate = () => {
       if ("serviceWorker" in navigator) {
-        void navigator.serviceWorker.getRegistration().then((registration) => registration?.update());
+        void navigator.serviceWorker
+          .getRegistration()
+          .then((registration) => registration?.update())
+          .catch(() => undefined);
       }
     };
     window.addEventListener("beforeinstallprompt", capturePrompt);
@@ -46,17 +55,20 @@ export function PwaManager() {
 
     if ("serviceWorker" in navigator) {
       // O registro ocorre no cliente para não interferir na renderização da Vercel.
-      navigator.serviceWorker.register("/sw.js").then((registration) => {
-        if (registration.waiting) setWaitingWorker(registration.waiting);
-        registration.addEventListener("updatefound", () => {
-          const worker = registration.installing;
-          worker?.addEventListener("statechange", () => {
-            if (worker.state === "installed" && navigator.serviceWorker.controller) {
-              setWaitingWorker(worker);
-            }
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          if (registration.waiting) setWaitingWorker(registration.waiting);
+          registration.addEventListener("updatefound", () => {
+            const worker = registration.installing;
+            worker?.addEventListener("statechange", () => {
+              if (worker.state === "installed" && navigator.serviceWorker.controller) {
+                setWaitingWorker(worker);
+              }
+            });
           });
-        });
-      });
+        })
+        .catch(() => undefined);
       window.addEventListener("online", checkForUpdate);
       document.addEventListener("visibilitychange", checkForUpdate);
     }
