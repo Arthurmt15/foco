@@ -27,6 +27,7 @@
 }
 
 .header { justify-content: space-between; }
+.headerActions { align-items: center; display: flex; gap: 16px; }
 .brand { color: var(--ink); gap: 11px; font-family: var(--font-display), sans-serif; }
 .brand > span {
   align-items: center;
@@ -47,6 +48,23 @@
 .weekLabel small,
 .hint { color: var(--muted); font-size: 0.7rem; }
 .weekLabel strong { color: var(--ink); font-size: 0.84rem; margin-top: 2px; }
+.addButton,
+.secondaryAdd {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.addButton {
+  background: #7357ff;
+  border-radius: 11px;
+  box-shadow: 0 8px 20px #7357ff32;
+  color: #ffffff;
+  font-size: 0.72rem;
+  padding: 11px 15px;
+}
+.addButton:hover,
+.secondaryAdd:hover { transform: translateY(-1px); }
 
 .hero {
   background:
@@ -152,6 +170,8 @@
 .settings { margin-top: 64px; }
 .sectionTitle { justify-content: space-between; margin-bottom: 22px; }
 .sectionTitle h2 { color: var(--ink); font-family: var(--font-display), sans-serif; font-size: clamp(1.65rem, 3vw, 2.05rem); letter-spacing: -0.055em; margin-top: 4px; }
+.sectionActions { align-items: center; display: flex; gap: 14px; }
+.secondaryAdd { background: #e9e5ff; border-radius: 10px; color: #5b40df; font-size: 0.69rem; padding: 10px 13px; }
 .periodGroup { margin-top: 30px; }
 .periodHeading { align-items: baseline; display: flex; gap: 10px; margin-bottom: 13px; }
 .periodHeading h3 { color: var(--ink); font-size: 0.9rem; }
@@ -202,9 +222,10 @@
   .environmentList { grid-template-columns: 1fr 1fr; }
   .periodHeading { align-items: flex-start; flex-direction: column; gap: 2px; }
   .hint { display: none; }
+  .weekLabel { display: none; }
 }
 
 @media (max-width: 390px) {
   .environmentList { grid-template-columns: 1fr; }
-  .weekLabel small { display: none; }
+  .addButton { padding-inline: 12px; }
 }

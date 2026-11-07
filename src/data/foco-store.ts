@@ -1,4 +1,4 @@
-import type { FocoData } from "@/domain/foco-types";
+import type { Environment, FocoData, Goal } from "@/domain/foco-types";
 import { toDateKey } from "@/domain/progress";
 import { widgetSummaryService } from "@/services/widget-summary-service";
 import { migrateFocoData } from "./migrate-foco-data";
@@ -48,6 +48,30 @@ export function addCheckIn(data: FocoData, goalId: string, amount: number): Foco
         amount,
       },
     ],
+  };
+  saveFocoData(updated);
+  return updated;
+}
+
+export function addEnvironment(
+  data: FocoData,
+  input: Pick<Environment, "name" | "color">,
+): FocoData {
+  const updated: FocoData = {
+    ...data,
+    environments: [...data.environments, { id: crypto.randomUUID(), ...input }],
+  };
+  saveFocoData(updated);
+  return updated;
+}
+
+export function addGoal(
+  data: FocoData,
+  input: Omit<Goal, "id">,
+): FocoData {
+  const updated: FocoData = {
+    ...data,
+    goals: [...data.goals, { id: crypto.randomUUID(), ...input }],
   };
   saveFocoData(updated);
   return updated;

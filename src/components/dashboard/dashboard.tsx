@@ -6,6 +6,7 @@ import type { GoalProgress, Periodicity, ProgressState } from "@/domain/foco-typ
 import { calculateProgress } from "@/domain/progress";
 import { useFocoData } from "@/hooks/use-foco-data";
 import { PwaManager } from "@/components/pwa/pwa-manager";
+import { CreateItemDialog, type CreateMode } from "@/components/create/create-item-dialog";
 import { PeriodFilter, type PeriodSelection } from "./period-filter";
 import styles from "./dashboard.module.css";
 
@@ -47,6 +48,7 @@ function ProgressBar({ progress }: { progress: GoalProgress }) {
 export function Dashboard() {
   const { data, setData } = useFocoData();
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodSelection>("all");
+  const [createMode, setCreateMode] = useState<CreateMode | null>(null);
 
   if (!data) {
     return <main className={styles.loading}>Organizando seu progresso...</main>;
@@ -61,7 +63,7 @@ export function Dashboard() {
   );
 
   function register(progress: GoalProgress) {
-    const amount = progress.goal.unit === "min" ? 20 : 1;
+    const amount = progress.goal.increment ?? 1;
     setData(addCheckIn(data!, progress.goal.id, amount));
   }
 
@@ -72,9 +74,12 @@ export function Dashboard() {
           <span>F.</span>
           <strong>Foco</strong>
         </a>
-        <div className={styles.weekLabel}>
-          <small>Visão atual</small>
-          <strong>Todos os períodos</strong>
+        <div className={styles.headerActions}>
+          <div className={styles.weekLabel}>
+            <small>Visão atual</small>
+            <strong>Todos os períodos</strong>
+          </div>
+          <button className={styles.addButton} type="button" onClick={() => setCreateMode("goal")}>+ Adicionar</button>
         </div>
       </header>
 
@@ -108,7 +113,10 @@ export function Dashboard() {
             <span className={styles.eyebrow}>Seu plano</span>
             <h2 id="objectives-title">Objetivos principais</h2>
           </div>
-          <span className={styles.hint}>A marca indica o esperado hoje</span>
+          <div className={styles.sectionActions}>
+            <span className={styles.hint}>A marca indica o esperado hoje</span>
+            <button className={styles.secondaryAdd} type="button" onClick={() => setCreateMode("goal")}>Nova meta</button>
+          </div>
         </div>
         <PeriodFilter selected={selectedPeriod} onSelect={setSelectedPeriod} />
         {periods.map((period) => {
@@ -146,6 +154,7 @@ export function Dashboard() {
             <span className={styles.eyebrow}>Mapa de vida</span>
             <h2 id="environments-title">Ambientes</h2>
           </div>
+          <button className={styles.secondaryAdd} type="button" onClick={() => setCreateMode("environment")}>Novo ambiente</button>
         </div>
         <div className={styles.environmentList}>
           {summary.environments.map((item) => (
@@ -167,6 +176,14 @@ export function Dashboard() {
         </div>
         <PwaManager />
       </section>
+      {createMode && (
+        <CreateItemDialog
+          data={data}
+          initialMode={createMode}
+          onClose={() => setCreateMode(null)}
+          onDataChange={setData}
+        />
+      )}
     </main>
   );
 }

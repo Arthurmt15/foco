@@ -19,7 +19,7 @@ export function createSeedData(today = new Date()): FocoData {
   });
 
   return {
-    version: 2,
+    version: 3,
     environments: [
       { id: "health", name: "Saúde", color: "#3d7d5c" },
       { id: "growth", name: "Crescimento", color: "#d98b35" },
@@ -33,6 +33,7 @@ export function createSeedData(today = new Date()): FocoData {
         environmentId: "health",
         name: "Movimentar o corpo",
         unit: "treinos",
+        increment: 1,
         featured: true,
         schedule: {
           periodicity: "weekly",
@@ -46,6 +47,7 @@ export function createSeedData(today = new Date()): FocoData {
         environmentId: "growth",
         name: "Leitura com calma",
         unit: "min",
+        increment: 20,
         featured: true,
         schedule: {
           periodicity: "daily",
@@ -58,6 +60,7 @@ export function createSeedData(today = new Date()): FocoData {
         environmentId: "work",
         name: "Sessões de foco",
         unit: "sessões",
+        increment: 1,
         featured: true,
         schedule: {
           periodicity: "weekly",
@@ -71,6 +74,7 @@ export function createSeedData(today = new Date()): FocoData {
         environmentId: "finance",
         name: "Revisar o orçamento",
         unit: "revisões",
+        increment: 1,
         featured: true,
         schedule: {
           periodicity: "monthly",

@@ -21,6 +21,7 @@ export interface Goal {
   environmentId: string;
   name: string;
   unit: string;
+  increment?: number;
   featured?: boolean;
   schedule: GoalSchedule;
 }
@@ -33,7 +34,7 @@ export interface CheckIn {
 }
 
 export interface FocoData {
-  version: 2;
+  version: 3;
   environments: Environment[];
   goals: Goal[];
   checkIns: CheckIn[];
