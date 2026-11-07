@@ -1,0 +1,267 @@
+.page {
+  margin: 0 auto;
+  max-width: 1120px;
+  min-height: 100dvh;
+  padding: 22px clamp(18px, 4vw, 48px) 80px;
+}
+
+.loading {
+  align-items: center;
+  color: #667068;
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+.header,
+.brand,
+.hero,
+.sectionTitle,
+.goalTop,
+.environmentList article {
+  align-items: center;
+  display: flex;
+}
+
+.header {
+  justify-content: space-between;
+}
+
+.brand {
+  color: #18392b;
+  gap: 10px;
+}
+
+.brand > span {
+  align-items: center;
+  background: #18392b;
+  border-radius: 11px;
+  color: #f5f1e8;
+  display: flex;
+  font-family: var(--font-display), serif;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+
+.weekLabel {
+  text-align: right;
+}
+
+.weekLabel small,
+.weekLabel strong {
+  display: block;
+}
+
+.weekLabel small,
+.hint {
+  color: #7b817d;
+  font-size: 0.72rem;
+}
+
+.hero {
+  background: #18392b;
+  border-radius: 30px;
+  color: #fffdf8;
+  justify-content: space-between;
+  margin-top: 28px;
+  min-height: 330px;
+  overflow: hidden;
+  padding: clamp(28px, 6vw, 68px);
+  position: relative;
+}
+
+.hero::after {
+  border: 1px solid #ffffff1c;
+  border-radius: 50%;
+  content: "";
+  height: 330px;
+  position: absolute;
+  right: -100px;
+  top: -160px;
+  width: 330px;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  color: #d98b35;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-family: var(--font-display), serif;
+  font-size: clamp(2.1rem, 5.5vw, 4.3rem);
+  font-weight: 560;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin: 14px 0 16px;
+}
+
+.hero p {
+  color: #c6d0ca;
+  font-size: 0.92rem;
+}
+
+.status {
+  align-items: center;
+  border: 1px solid #ffffff24;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 700;
+  gap: 7px;
+  margin-top: 22px;
+  padding: 8px 12px;
+}
+
+.status i,
+.dot {
+  background: #9ba19d;
+  border-radius: 50%;
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+}
+
+.on-track i,
+.dot.on-track { background: #6fcf91; }
+.attention i,
+.dot.attention { background: #f2c94c; }
+.behind i,
+.dot.behind { background: #eb6f6f; }
+
+.ring {
+  background: conic-gradient(#e6a856 var(--progress), #ffffff1f 0);
+  border-radius: 50%;
+  display: grid;
+  flex: 0 0 auto;
+  height: clamp(145px, 22vw, 210px);
+  margin-left: 30px;
+  place-items: center;
+  position: relative;
+  width: clamp(145px, 22vw, 210px);
+  z-index: 1;
+}
+
+.ring::before {
+  background: #18392b;
+  border-radius: inherit;
+  content: "";
+  inset: 13px;
+  position: absolute;
+}
+
+.ring div {
+  position: relative;
+  text-align: center;
+}
+
+.ring strong,
+.ring span {
+  display: block;
+}
+
+.ring strong {
+  font-family: var(--font-display), serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.ring span {
+  color: #aebdb5;
+  font-size: 0.72rem;
+}
+
+.metrics {
+  background: #fff;
+  border: 1px solid #e1dcd1;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: -20px 28px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.metrics article {
+  padding: 21px;
+  text-align: center;
+}
+
+.metrics article + article { border-left: 1px solid #eee9df; }
+.metrics strong { color: #18392b; display: block; font-size: 1.35rem; }
+.metrics span { color: #7b817d; font-size: 0.72rem; }
+
+.section,
+.settings { margin-top: 58px; }
+.sectionTitle { justify-content: space-between; margin-bottom: 20px; }
+.sectionTitle h2 { color: #18392b; font-family: var(--font-display), serif; font-size: 1.8rem; margin-top: 4px; }
+
+.goalGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.goalCard {
+  background: #fff;
+  border: 1px solid #e1dcd1;
+  border-radius: 20px;
+  padding: 21px;
+}
+
+.goalTop { color: #7b817d; font-size: 0.68rem; gap: 7px; }
+.goalTop strong { color: #18392b; font-size: 0.9rem; margin-left: auto; }
+.goalCard h3 { color: #283d32; font-size: 1rem; margin: 28px 0 5px; }
+.goalCard p { color: #7b817d; font-size: 0.75rem; }
+
+.track {
+  background: #ebe8e0;
+  border-radius: 99px;
+  height: 7px;
+  margin: 17px 0;
+  position: relative;
+}
+
+.fill { background: #3d7d5c; border-radius: inherit; display: block; height: 100%; }
+.expected { background: #18392b; border: 2px solid #fff; border-radius: 50%; height: 11px; position: absolute; top: -2px; transform: translateX(-50%); width: 11px; }
+.goalCard button { background: transparent; border: 0; color: #a05f20; cursor: pointer; font-size: 0.72rem; font-weight: 800; padding: 4px 0; }
+
+.environmentList {
+  background: #fff;
+  border: 1px solid #e1dcd1;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+}
+
+.environmentList article { gap: 11px; padding: 20px; }
+.environmentList article + article { border-left: 1px solid #eee9df; }
+.environmentIcon { border-radius: 10px; height: 32px; opacity: 0.9; width: 8px; }
+.environmentList div { min-width: 0; }
+.environmentList strong,
+.environmentList small { display: block; }
+.environmentList strong { color: #283d32; font-size: 0.83rem; }
+.environmentList small { color: #8a8f8b; font-size: 0.65rem; }
+.environmentList b { color: #18392b; font-size: 0.9rem; margin-left: auto; }
+
+@media (max-width: 720px) {
+  .page { padding-inline: 14px; }
+  .hero { align-items: flex-start; border-radius: 24px; flex-direction: column; gap: 34px; }
+  .ring { align-self: flex-end; height: 135px; width: 135px; }
+  .metrics { grid-template-columns: repeat(2, 1fr); margin: -16px 12px 0; }
+  .metrics article:nth-child(3) { border-left: 0; border-top: 1px solid #eee9df; }
+  .metrics article:nth-child(4) { border-top: 1px solid #eee9df; }
+  .goalGrid { grid-template-columns: 1fr; }
+  .environmentList { grid-template-columns: 1fr 1fr; }
+  .environmentList article:nth-child(3) { border-left: 0; border-top: 1px solid #eee9df; }
+  .environmentList article:nth-child(4) { border-top: 1px solid #eee9df; }
+  .hint { display: none; }
+}

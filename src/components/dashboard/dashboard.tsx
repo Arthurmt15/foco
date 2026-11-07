@@ -1,0 +1,148 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import { addCheckIn } from "@/data/foco-store";
+import type { GoalProgress, ProgressState } from "@/domain/foco-types";
+import { calculateWeeklyProgress } from "@/domain/progress";
+import { useFocoData } from "@/hooks/use-foco-data";
+import { PwaManager } from "@/components/pwa/pwa-manager";
+import styles from "./dashboard.module.css";
+
+const STATE_LABEL: Record<ProgressState, string> = {
+  "on-track": "No ritmo",
+  attention: "Atenção leve",
+  behind: "Hora de retomar",
+  neutral: "Sem dados",
+};
+
+const STATE_MESSAGE: Record<ProgressState, string> = {
+  "on-track": "Você está acompanhando bem o plano.",
+  attention: "Um pequeno passo hoje mantém o ritmo.",
+  behind: "Recomeçar com calma também é progresso.",
+  neutral: "Adicione metas para começar a acompanhar.",
+};
+
+function clampPercentage(value: number): number {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function ProgressBar({ progress }: { progress: GoalProgress }) {
+  const width = clampPercentage(progress.percentage);
+  const expected = clampPercentage(progress.expectedPercentage);
+  return (
+    <div className={styles.track} aria-label={`${width}% realizado, ${expected}% esperado`}>
+      <span className={styles.fill} style={{ width: `${width}%` }} />
+      <span className={styles.expected} style={{ left: `${expected}%` }} />
+    </div>
+  );
+}
+
+export function Dashboard() {
+  const { data, setData } = useFocoData();
+
+  if (!data) {
+    return <main className={styles.loading}>Organizando seu progresso...</main>;
+  }
+
+  const summary = calculateWeeklyProgress(data);
+  const percent = clampPercentage(summary.percentage);
+  const ringStyle = { "--progress": `${percent * 3.6}deg` } as CSSProperties;
+  const featured = summary.goals.filter((item) => item.goal.featured).slice(0, 3);
+
+  function register(progress: GoalProgress) {
+    const amount = progress.goal.unit === "min" ? 20 : 1;
+    setData(addCheckIn(data!, progress.goal.id, amount));
+  }
+
+  return (
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <a className={styles.brand} href="#top" aria-label="Foco, início">
+          <span>F.</span>
+          <strong>Foco</strong>
+        </a>
+        <div className={styles.weekLabel}>
+          <small>Visão atual</small>
+          <strong>Esta semana</strong>
+        </div>
+      </header>
+
+      <section className={styles.hero} id="top">
+        <div className={styles.heroCopy}>
+          <span className={styles.eyebrow}>Seu ritmo semanal</span>
+          <h1>Continue presente.<br />O caminho aparece.</h1>
+          <p>{STATE_MESSAGE[summary.state]}</p>
+          <span className={`${styles.status} ${styles[summary.state]}`}>
+            <i /> {STATE_LABEL[summary.state]}
+          </span>
+        </div>
+        <div className={styles.ring} style={ringStyle} aria-label={`${percent}% concluído`}>
+          <div>
+            <strong>{percent}%</strong>
+            <span>realizado</span>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.metrics} aria-label="Resumo da semana">
+        <article><strong>{summary.completed}</strong><span>metas cumpridas</span></article>
+        <article><strong>{summary.pending}</strong><span>metas pendentes</span></article>
+        <article><strong>{summary.streak}</strong><span>dias em sequência</span></article>
+        <article><strong>{clampPercentage(summary.expectedPercentage)}%</strong><span>esperado até hoje</span></article>
+      </section>
+
+      <section className={styles.section} aria-labelledby="objectives-title">
+        <div className={styles.sectionTitle}>
+          <div>
+            <span className={styles.eyebrow}>Prioridades</span>
+            <h2 id="objectives-title">Objetivos principais</h2>
+          </div>
+          <span className={styles.hint}>A marca indica o esperado hoje</span>
+        </div>
+        <div className={styles.goalGrid}>
+          {featured.map((progress) => (
+            <article className={styles.goalCard} key={progress.goal.id}>
+              <div className={styles.goalTop}>
+                <span className={`${styles.dot} ${styles[progress.state]}`} />
+                <span>{STATE_LABEL[progress.state]}</span>
+                <strong>{clampPercentage(progress.percentage)}%</strong>
+              </div>
+              <h3>{progress.goal.name}</h3>
+              <p>{progress.actual} de {progress.target} {progress.goal.unit}</p>
+              <ProgressBar progress={progress} />
+              <button type="button" onClick={() => register(progress)}>+ Registrar avanço</button>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.section} aria-labelledby="environments-title">
+        <div className={styles.sectionTitle}>
+          <div>
+            <span className={styles.eyebrow}>Equilíbrio</span>
+            <h2 id="environments-title">Ambientes</h2>
+          </div>
+        </div>
+        <div className={styles.environmentList}>
+          {summary.environments.map((item) => (
+            <article key={item.environment.id}>
+              <span className={styles.environmentIcon} style={{ background: item.environment.color }} />
+              <div><strong>{item.environment.name}</strong><small>{STATE_LABEL[item.state]}</small></div>
+              <b>{item.eligibleGoals > 0 ? `${clampPercentage(item.percentage)}%` : "—"}</b>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.settings} aria-labelledby="settings-title">
+        <div className={styles.sectionTitle}>
+          <div>
+            <span className={styles.eyebrow}>Preferências</span>
+            <h2 id="settings-title">Configurações</h2>
+          </div>
+        </div>
+        <PwaManager />
+      </section>
+    </main>
+  );
+}
