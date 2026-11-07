@@ -1,5 +1,6 @@
 import type { FocoData } from "@/domain/foco-types";
 import { toDateKey } from "@/domain/progress";
+import { widgetSummaryService } from "@/services/widget-summary-service";
 import { createSeedData } from "./seed-data";
 
 const STORAGE_KEY = "foco:data:v1";
@@ -14,7 +15,9 @@ export function loadFocoData(): FocoData {
   }
 
   try {
-    return JSON.parse(raw) as FocoData;
+    const data = JSON.parse(raw) as FocoData;
+    widgetSummaryService.writeCache(data);
+    return data;
   } catch {
     // Um valor inválido não apaga a chave original; apenas mantém o app utilizável.
     return createSeedData();
@@ -23,6 +26,8 @@ export function loadFocoData(): FocoData {
 
 export function saveFocoData(data: FocoData): void {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  // O cache desacoplado fica pronto para sincronização por uma bridge nativa futura.
+  widgetSummaryService.writeCache(data);
   window.dispatchEvent(new CustomEvent(DATA_CHANGED_EVENT, { detail: data }));
 }
 
