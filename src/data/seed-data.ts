@@ -19,12 +19,13 @@ export function createSeedData(today = new Date()): FocoData {
   });
 
   return {
-    version: 1,
+    version: 2,
     environments: [
       { id: "health", name: "Saúde", color: "#3d7d5c" },
       { id: "growth", name: "Crescimento", color: "#d98b35" },
       { id: "work", name: "Trabalho", color: "#566d91" },
       { id: "home", name: "Casa", color: "#8c8174" },
+      { id: "finance", name: "Finanças", color: "#8f6b55" },
     ],
     goals: [
       {
@@ -48,7 +49,7 @@ export function createSeedData(today = new Date()): FocoData {
         featured: true,
         schedule: {
           periodicity: "daily",
-          target: 140,
+          target: 20,
           startsAt: startedAt,
         },
       },
@@ -62,6 +63,19 @@ export function createSeedData(today = new Date()): FocoData {
           periodicity: "weekly",
           target: 4,
           weekdays: [1, 2, 4, 5],
+          startsAt: startedAt,
+        },
+      },
+      {
+        id: "budget-review",
+        environmentId: "finance",
+        name: "Revisar o orçamento",
+        unit: "revisões",
+        featured: true,
+        schedule: {
+          periodicity: "monthly",
+          target: 4,
+          monthDays: [5, 12, 19, 26],
           startsAt: startedAt,
         },
       },

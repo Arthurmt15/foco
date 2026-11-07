@@ -1,9 +1,10 @@
-import type { FocoData, ProgressState } from "@/domain/foco-types";
-import { calculateWeeklyProgress } from "@/domain/progress";
+import type { FocoData, Periodicity, ProgressState } from "@/domain/foco-types";
+import { calculateProgress } from "@/domain/progress";
 
 export interface WidgetGoalSummary {
   environmentId: string;
   objectiveName: string;
+  periodicity: Periodicity;
   realizedPercentage: number;
   expectedPercentage: number;
   state: ProgressState;
@@ -12,11 +13,11 @@ export interface WidgetGoalSummary {
 }
 
 export interface WidgetSummaryCache {
-  version: 1;
+  version: 2;
   goals: WidgetGoalSummary[];
 }
 
-const WIDGET_CACHE_KEY = "foco:widget-summary:v1";
+const WIDGET_CACHE_KEY = "foco:widget-summary:v2";
 
 function compactPercentage(value: number): number {
   return Math.max(0, Math.min(999, Math.round(value)));
@@ -28,14 +29,15 @@ function compactPercentage(value: number): number {
  */
 export class WidgetSummaryService {
   generate(data: FocoData, now = new Date()): WidgetSummaryCache {
-    const progress = calculateWeeklyProgress(data, now);
+    const progress = calculateProgress(data, now);
     const updatedAt = now.toISOString();
 
     return {
-      version: 1,
+      version: 2,
       goals: progress.goals.map((item) => ({
         environmentId: item.goal.environmentId,
         objectiveName: item.goal.name,
+        periodicity: item.goal.schedule.periodicity,
         realizedPercentage: compactPercentage(item.percentage),
         expectedPercentage: compactPercentage(item.expectedPercentage),
         state: item.state,

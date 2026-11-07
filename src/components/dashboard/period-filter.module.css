@@ -1,0 +1,43 @@
+.filter {
+  background: #ebe6dc;
+  border-radius: 14px;
+  display: inline-flex;
+  gap: 3px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.filter button {
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  color: #69736d;
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 9px 13px;
+}
+
+.filter button[aria-pressed="true"] {
+  background: #ffffff;
+  box-shadow: 0 2px 8px #18392b12;
+  color: #18392b;
+}
+
+.filter button:focus-visible {
+  outline: 2px solid #d98b35;
+  outline-offset: 1px;
+}
+
+@media (max-width: 480px) {
+  .filter {
+    display: flex;
+    width: 100%;
+  }
+
+  .filter button {
+    flex: 1 0 auto;
+  }
+}

@@ -4,10 +4,11 @@ Este documento descreve a segunda etapa. O PWA hospedado na Vercel não instala 
 
 ## Contrato disponível
 
-`WidgetSummaryService` gera e salva `foco:widget-summary:v1` com:
+`WidgetSummaryService` gera e salva `foco:widget-summary:v2` com:
 
 - `environmentId`: identificador estável do ambiente.
 - `objectiveName`: nome exibido do objetivo.
+- `periodicity`: período `daily`, `weekly` ou `monthly` da meta.
 - `realizedPercentage`: percentual realizado no período.
 - `expectedPercentage`: percentual esperado até a atualização.
 - `state`: `on-track`, `attention`, `behind` ou `neutral`.

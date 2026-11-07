@@ -1,11 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { addCheckIn } from "@/data/foco-store";
-import type { GoalProgress, ProgressState } from "@/domain/foco-types";
-import { calculateWeeklyProgress } from "@/domain/progress";
+import type { GoalProgress, Periodicity, ProgressState } from "@/domain/foco-types";
+import { calculateProgress } from "@/domain/progress";
 import { useFocoData } from "@/hooks/use-foco-data";
 import { PwaManager } from "@/components/pwa/pwa-manager";
+import { PeriodFilter, type PeriodSelection } from "./period-filter";
 import styles from "./dashboard.module.css";
 
 const STATE_LABEL: Record<ProgressState, string> = {
@@ -20,6 +21,12 @@ const STATE_MESSAGE: Record<ProgressState, string> = {
   attention: "Um pequeno passo hoje mantém o ritmo.",
   behind: "Recomeçar com calma também é progresso.",
   neutral: "Adicione metas para começar a acompanhar.",
+};
+
+const PERIOD_META: Record<Periodicity, { title: string; detail: string }> = {
+  daily: { title: "Metas diárias", detail: "Reiniciam todos os dias" },
+  weekly: { title: "Metas semanais", detail: "De segunda a domingo" },
+  monthly: { title: "Metas mensais", detail: "Acompanham o calendário do mês" },
 };
 
 function clampPercentage(value: number): number {
@@ -39,15 +46,19 @@ function ProgressBar({ progress }: { progress: GoalProgress }) {
 
 export function Dashboard() {
   const { data, setData } = useFocoData();
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodSelection>("all");
 
   if (!data) {
     return <main className={styles.loading}>Organizando seu progresso...</main>;
   }
 
-  const summary = calculateWeeklyProgress(data);
+  const summary = calculateProgress(data);
   const percent = clampPercentage(summary.percentage);
   const ringStyle = { "--progress": `${percent * 3.6}deg` } as CSSProperties;
-  const featured = summary.goals.filter((item) => item.goal.featured).slice(0, 3);
+  const featured = summary.goals.filter((item) => item.goal.featured);
+  const periods = (Object.keys(PERIOD_META) as Periodicity[]).filter(
+    (period) => selectedPeriod === "all" || selectedPeriod === period,
+  );
 
   function register(progress: GoalProgress) {
     const amount = progress.goal.unit === "min" ? 20 : 1;
@@ -63,13 +74,13 @@ export function Dashboard() {
         </a>
         <div className={styles.weekLabel}>
           <small>Visão atual</small>
-          <strong>Esta semana</strong>
+          <strong>Períodos ativos</strong>
         </div>
       </header>
 
       <section className={styles.hero} id="top">
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>Seu ritmo semanal</span>
+          <span className={styles.eyebrow}>Seu ritmo geral</span>
           <h1>Continue presente.<br />O caminho aparece.</h1>
           <p>{STATE_MESSAGE[summary.state]}</p>
           <span className={`${styles.status} ${styles[summary.state]}`}>
@@ -84,7 +95,7 @@ export function Dashboard() {
         </div>
       </section>
 
-      <section className={styles.metrics} aria-label="Resumo da semana">
+      <section className={styles.metrics} aria-label="Resumo dos períodos ativos">
         <article><strong>{summary.completed}</strong><span>metas cumpridas</span></article>
         <article><strong>{summary.pending}</strong><span>metas pendentes</span></article>
         <article><strong>{summary.streak}</strong><span>dias em sequência</span></article>
@@ -99,21 +110,34 @@ export function Dashboard() {
           </div>
           <span className={styles.hint}>A marca indica o esperado hoje</span>
         </div>
-        <div className={styles.goalGrid}>
-          {featured.map((progress) => (
-            <article className={styles.goalCard} key={progress.goal.id}>
-              <div className={styles.goalTop}>
-                <span className={`${styles.dot} ${styles[progress.state]}`} />
-                <span>{STATE_LABEL[progress.state]}</span>
-                <strong>{clampPercentage(progress.percentage)}%</strong>
+        <PeriodFilter selected={selectedPeriod} onSelect={setSelectedPeriod} />
+        {periods.map((period) => {
+          const goals = featured.filter((item) => item.goal.schedule.periodicity === period);
+          if (goals.length === 0) return null;
+          return (
+            <div className={styles.periodGroup} key={period}>
+              <div className={styles.periodHeading}>
+                <h3>{PERIOD_META[period].title}</h3>
+                <span>{PERIOD_META[period].detail}</span>
               </div>
-              <h3>{progress.goal.name}</h3>
-              <p>{progress.actual} de {progress.target} {progress.goal.unit}</p>
-              <ProgressBar progress={progress} />
-              <button type="button" onClick={() => register(progress)}>+ Registrar avanço</button>
-            </article>
-          ))}
-        </div>
+              <div className={styles.goalGrid}>
+                {goals.map((progress) => (
+                  <article className={styles.goalCard} key={progress.goal.id}>
+                    <div className={styles.goalTop}>
+                      <span className={`${styles.dot} ${styles[progress.state]}`} />
+                      <span>{STATE_LABEL[progress.state]}</span>
+                      <strong>{clampPercentage(progress.percentage)}%</strong>
+                    </div>
+                    <h3>{progress.goal.name}</h3>
+                    <p>{progress.actual} de {progress.target} {progress.goal.unit}</p>
+                    <ProgressBar progress={progress} />
+                    <button type="button" onClick={() => register(progress)}>+ Registrar avanço</button>
+                  </article>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </section>
 
       <section className={styles.section} aria-labelledby="environments-title">

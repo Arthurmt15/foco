@@ -211,6 +211,11 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.periodGroup { margin-top: 28px; }
+.periodHeading { align-items: baseline; display: flex; gap: 10px; margin-bottom: 12px; }
+.periodHeading h3 { color: #283d32; font-size: 0.9rem; }
+.periodHeading span { color: #8a8f8b; font-size: 0.68rem; }
+
 .goalCard {
   background: #fff;
   border: 1px solid #e1dcd1;
@@ -267,7 +272,8 @@
   .metrics article:nth-child(4) { border-top: 1px solid #eee9df; }
   .goalGrid { grid-template-columns: 1fr; }
   .environmentList { grid-template-columns: 1fr 1fr; }
-  .environmentList article:nth-child(3) { border-left: 0; border-top: 1px solid #eee9df; }
-  .environmentList article:nth-child(4) { border-top: 1px solid #eee9df; }
+  .environmentList article:nth-child(odd) { border-left: 0; }
+  .environmentList article:nth-child(n + 3) { border-top: 1px solid #eee9df; }
+  .periodHeading { align-items: flex-start; flex-direction: column; gap: 2px; }
   .hint { display: none; }
 }

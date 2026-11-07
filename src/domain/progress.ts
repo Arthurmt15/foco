@@ -6,7 +6,7 @@ import type {
   Goal,
   GoalProgress,
   ProgressState,
-  WeeklyProgress,
+  ProgressSummary,
 } from "./foco-types";
 
 const DAY_MS = 86_400_000;
@@ -39,6 +39,10 @@ export function weekBounds(today: Date): { start: Date; end: Date } {
 }
 
 function periodBounds(goal: Goal, today: Date): { start: Date; end: Date } {
+  if (goal.schedule.periodicity === "daily") {
+    const current = atStartOfDay(today);
+    return { start: current, end: current };
+  }
   if (goal.schedule.periodicity === "monthly") {
     return {
       start: new Date(today.getFullYear(), today.getMonth(), 1),
@@ -142,7 +146,7 @@ function calculateStreak(checkIns: CheckIn[], today: Date): number {
   return streak;
 }
 
-export function calculateWeeklyProgress(data: FocoData, today = new Date()): WeeklyProgress {
+export function calculateProgress(data: FocoData, today = new Date()): ProgressSummary {
   const goals = data.goals.map((goal) => goalProgress(goal, data.checkIns, today));
   const environments = data.environments.map((environment) =>
     environmentProgress(environment, goals),

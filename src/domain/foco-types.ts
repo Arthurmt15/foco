@@ -33,7 +33,7 @@ export interface CheckIn {
 }
 
 export interface FocoData {
-  version: 1;
+  version: 2;
   environments: Environment[];
   goals: Goal[];
   checkIns: CheckIn[];
@@ -60,7 +60,7 @@ export interface EnvironmentProgress {
   eligibleGoals: number;
 }
 
-export interface WeeklyProgress {
+export interface ProgressSummary {
   goals: GoalProgress[];
   environments: EnvironmentProgress[];
   actual: number;

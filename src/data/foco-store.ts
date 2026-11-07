@@ -1,6 +1,7 @@
 import type { FocoData } from "@/domain/foco-types";
 import { toDateKey } from "@/domain/progress";
 import { widgetSummaryService } from "@/services/widget-summary-service";
+import { migrateFocoData } from "./migrate-foco-data";
 import { createSeedData } from "./seed-data";
 
 const STORAGE_KEY = "foco:data:v1";
@@ -15,7 +16,11 @@ export function loadFocoData(): FocoData {
   }
 
   try {
-    const data = JSON.parse(raw) as FocoData;
+    const stored = JSON.parse(raw) as FocoData;
+    const data = migrateFocoData(stored);
+    if (stored.version !== data.version) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
     widgetSummaryService.writeCache(data);
     return data;
   } catch {
