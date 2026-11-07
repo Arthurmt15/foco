@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Foco
 
-## Getting Started
+PWA mobile-first para acompanhar objetivos, metas, check-ins e progresso semanal sem depender de conexão constante.
 
-First, run the development server:
+## Recursos operacionais
+
+- Instalação PWA no Android quando o navegador disponibiliza `beforeinstallprompt`.
+- Orientação correta de instalação no Safari do iOS.
+- Manifesto com ícones próprios, variantes maskable e modo standalone.
+- Service worker com shell offline e atualização confirmada pelo usuário.
+- Painel semanal responsivo com progresso realizado e esperado.
+- Estados no ritmo, atenção, atrasado e neutro calculados pelo calendário da meta.
+- Dados, check-ins e resumo para widgets persistidos no `localStorage`.
+
+## Desenvolvimento
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Validação
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+npm start
+```
 
-## Learn More
+O deploy web pode ser feito diretamente na Vercel. HTTPS é fornecido pela plataforma e é obrigatório para service workers fora de `localhost`.
 
-To learn more about Next.js, take a look at the following resources:
+## Dados locais
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O domínio é salvo em `foco:data:v1`. O cache compacto para uma futura bridge nativa fica em `foco:widget-summary:v1`. As chaves são versionadas para permitir migrações futuras sem apagar dados existentes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Widgets nativos
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Widgets de tela inicial não podem ser implementados por Next.js ou service worker. A arquitetura e a segunda etapa estão documentadas em [`docs/NATIVE_WIDGETS.md`](docs/NATIVE_WIDGETS.md).
